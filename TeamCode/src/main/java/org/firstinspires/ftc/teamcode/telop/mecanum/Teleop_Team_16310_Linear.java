@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.telop.mecanum;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -59,10 +60,10 @@ public class Teleop_Team_16310_Linear extends OpMode
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor frontleftDrive = null;
-    private DcMotor frontrightDrive = null;
-    private DcMotor backleftDrive = null;
-    private DcMotor backrightDrive = null;
+    private DcMotorEx frontleftDrive = null;
+    private DcMotorEx frontrightDrive = null;
+    private DcMotorEx backleftDrive = null;
+    private DcMotorEx backrightDrive = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -74,26 +75,28 @@ public class Teleop_Team_16310_Linear extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        frontleftDrive  = hardwareMap.get(DcMotor.class, "FrontLeft");
-        frontrightDrive = hardwareMap.get(DcMotor.class, "FrontRight");
-        backleftDrive  = hardwareMap.get(DcMotor.class, "BackLeft");
-        backrightDrive = hardwareMap.get(DcMotor.class, "BackRight");
+        frontleftDrive  = hardwareMap.get(DcMotorEx.class, "FrontLeft");
+        frontrightDrive = hardwareMap.get(DcMotorEx.class, "FrontRight");
+        backleftDrive  = hardwareMap.get(DcMotorEx.class, "BackLeft");
+        backrightDrive = hardwareMap.get(DcMotorEx.class, "BackRight");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        frontleftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontrightDrive.setDirection(DcMotor.Direction.REVERSE);
-        backleftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backrightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontleftDrive.setDirection(DcMotorEx.Direction.FORWARD);
+        frontrightDrive.setDirection(DcMotorEx.Direction.REVERSE);
+        backleftDrive.setDirection(DcMotorEx.Direction.FORWARD);
+        backrightDrive.setDirection(DcMotorEx.Direction.REVERSE);
+
+        frontleftDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        frontrightDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backleftDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backrightDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
 
-
-
-
-        frontleftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        frontrightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        backleftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        backrightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontleftDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        frontrightDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        backleftDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        backrightDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
 
         // Tell the driver that initialization is complete.
@@ -177,6 +180,7 @@ public class Teleop_Team_16310_Linear extends OpMode
         }
 
         telemetry.addData("Motors", "Frontleft (%.2f), Frontright (%.2f), Backleft (%.2f), Backright (%.2f)", frontleftPower, frontrightPower, backleftPower,backrightPower);
+        telemetry.addData("velocity", frontleftDrive.getVelocity());
         telemetry.update();
     }
 

@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -53,15 +54,22 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class Mecanum_hardware
 {
     /* Public OpMode members. */
-    public DcMotor  frontLeft   = null;
-    public DcMotor  frontRight  = null;
-    public DcMotor  backLeft  = null;
-    public DcMotor  backRight  = null;
+    public DcMotorEx  frontLeft   = null;
+    public DcMotorEx  frontRight  = null;
+    public DcMotorEx  backLeft  = null;
+    public DcMotorEx  backRight  = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     public ElapsedTime runtime  = new ElapsedTime();
 
+    public static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    public static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
+    public static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    public static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    public static final double     DRIVE_SPEED             = 0.6;
+    public static final double     TURN_SPEED              = 0.5;
 
     /* Constructor */
     public Mecanum_hardware(){
@@ -74,20 +82,20 @@ public class Mecanum_hardware
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        frontLeft  = hwMap.get(DcMotor.class, "FrontLeft");
-        frontRight = hwMap.get(DcMotor.class, "FrontRight");
-        backLeft =  hwMap.get(DcMotor.class, "BackLeft");
-        backRight = hwMap.get(DcMotor.class, "BackRight");
+        frontLeft  = hwMap.get(DcMotorEx.class, "FrontLeft");
+        frontRight = hwMap.get(DcMotorEx.class, "FrontRight");
+        backLeft =  hwMap.get(DcMotorEx.class, "BackLeft");
+        backRight = hwMap.get(DcMotorEx.class, "BackRight");
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        frontRight.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotorEx.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        frontRight.setDirection(DcMotorEx.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        backLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        backRight.setDirection(DcMotorEx.Direction.FORWARD);
 
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         // Set all motors to zero power
         frontLeft.setPower(0);
@@ -95,14 +103,17 @@ public class Mecanum_hardware
         backLeft.setPower(0);
         backRight.setPower(0);
 
-
+        frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
 
 }
