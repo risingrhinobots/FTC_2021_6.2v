@@ -32,7 +32,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -94,15 +94,15 @@ public class Encoder_drive extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        robot.frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        robot.backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        robot.backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -161,19 +161,19 @@ public class Encoder_drive extends LinearOpMode {
             robot.backRight.setTargetPosition(newBackRightTarget);
 
             // Turn On RUN_TO_POSITION
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.frontRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            robot.frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            robot.backRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            robot.backLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
 
 
-            robot.frontRight.setPower(Math.abs(speed));
-            robot.frontLeft.setPower(Math.abs(speed));
-            robot.backRight.setPower(Math.abs(speed));
-            robot.backLeft.setPower(Math.abs(speed));
+            robot.frontRight.setVelocity(Math.abs(speed));
+            robot.frontLeft.setVelocity(Math.abs(speed));
+            robot.backRight.setVelocity(Math.abs(speed));
+            robot.backLeft.setVelocity(Math.abs(speed));
 
 
             // keep looping while we are still active, and there is time left, and both motors are running.
@@ -195,16 +195,16 @@ public class Encoder_drive extends LinearOpMode {
             }
 
             // Stop all motion;
-            robot.frontRight.setPower(0);
-            robot.frontLeft.setPower(0);
-            robot.backRight.setPower(0);
-            robot.backLeft.setPower(0);
+            robot.frontRight.setVelocity(0);
+            robot.frontLeft.setVelocity(0);
+            robot.backRight.setVelocity(0);
+            robot.backLeft.setVelocity(0);
 
             // Turn off RUN_TO_POSITION
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            robot.frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            robot.backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            robot.backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
         }

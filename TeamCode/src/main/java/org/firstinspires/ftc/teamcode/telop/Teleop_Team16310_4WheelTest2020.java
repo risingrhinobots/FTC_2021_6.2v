@@ -130,10 +130,10 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
         BackRightDrive.setDirection(DcMotor.Direction.REVERSE);
         FrontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         FrontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        InTakeMotor.setDirection(DcMotor.Direction.REVERSE);
-        ConveyorMotor.setDirection(DcMotor.Direction.FORWARD);
-        LeftShooter.setDirection(DcMotor.Direction.REVERSE);
-        RightShooter.setDirection(DcMotor.Direction.FORWARD);
+        InTakeMotor.setDirection(DcMotor.Direction.FORWARD);
+        ConveyorMotor.setDirection(DcMotor.Direction.REVERSE);
+        LeftShooter.setDirection(DcMotor.Direction.FORWARD);
+        RightShooter.setDirection(DcMotor.Direction.REVERSE);
 
 /*
        BackLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

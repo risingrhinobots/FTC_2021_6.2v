@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode.test;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -50,14 +49,13 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Motor_Test_T_A_Servo", group="Linear Opmode")
+@TeleOp(name="Motor_Test_T", group="Linear Opmode")
 //@Disabled
-public class motor_Test_T_Servo extends LinearOpMode {
+public class motor_Test_T extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor motor1 = null;
-    private Servo servo = null;
 
     @Override
     public void runOpMode() {
@@ -68,14 +66,10 @@ public class motor_Test_T_Servo extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         motor1  = hardwareMap.get(DcMotor.class, "SampleMotor1");
-        servo = hardwareMap.get(Servo.class, "ServoTrigger");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         motor1.setDirection(DcMotor.Direction.FORWARD);
-
-        servo.setPosition(0.78);
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -93,22 +87,6 @@ public class motor_Test_T_Servo extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
             motorPower    = Range.clip(drive + 0, -1, 1) ;
-
-            if(gamepad1.right_bumper){
-                servo.setPosition(0.85);
-            }
-
-            if (gamepad1.left_bumper){
-                servo.setPosition(0.56);
-            }
-
-            if(gamepad1.x){
-                motor1.setPower(1);
-            }
-
-            if (gamepad1.y){
-                motor1.setPower(0);
-            }
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.

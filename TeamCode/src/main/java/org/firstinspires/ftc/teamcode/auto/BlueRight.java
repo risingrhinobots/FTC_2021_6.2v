@@ -24,7 +24,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
@@ -56,8 +56,8 @@ public class BlueRight extends LinearOpMode
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.5;
-    static final double     TURN_SPEED              = 0.3;
+    static final double     DRIVE_SPEED             = 1300;
+    static final double     TURN_SPEED              = 1000;
 
     double  armPosition, gripPosition, gatePosition,guidePosition;
     double armMinPosition, armMaxPosition;
@@ -107,15 +107,15 @@ public class BlueRight extends LinearOpMode
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        robot.frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        robot.backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        robot.backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
@@ -179,16 +179,16 @@ public class BlueRight extends LinearOpMode
                 //encoderDrive(TURN_SPEED,-2,2,-2,2,4);
 
                 robot.guideServo.setPosition(guidePosition);
-                robot.conveyor.setPower(1);
-                robot.leftShooter.setPower(1);
-                robot.rightShooter.setPower(1);
-                robot.intake.setPower(1);
+                robot.conveyor.setVelocity(1);
+                robot.leftShooter.setVelocity(1);
+                robot.rightShooter.setVelocity(1);
+                robot.intake.setVelocity(1);
                 sleep(6000);
 
-                robot.conveyor.setPower(0);
-                robot.leftShooter.setPower(0);
-                robot.rightShooter.setPower(0);
-                robot.intake.setPower(0);
+                robot.conveyor.setVelocity(0);
+                robot.leftShooter.setVelocity(0);
+                robot.rightShooter.setVelocity(0);
+                robot.intake.setVelocity(0);
 
                 //drive to position on the launch line
                 encoderDrive(DRIVE_SPEED, 10,10,10,10, 5);
@@ -232,16 +232,16 @@ public class BlueRight extends LinearOpMode
                 encoderDrive(TURN_SPEED,-1.8,1.8,-1.8,1.8,4);
 
                 robot.guideServo.setPosition(guidePosition);
-                robot.conveyor.setPower(1);
-                robot.leftShooter.setPower(1);
-                robot.rightShooter.setPower(1);
-                robot.intake.setPower(1);
+                robot.conveyor.setVelocity(1);
+                robot.leftShooter.setVelocity(1);
+                robot.rightShooter.setVelocity(1);
+                robot.intake.setVelocity(1);
                 sleep(6000);
 
-                robot.conveyor.setPower(0);
-                robot.leftShooter.setPower(0);
-                robot.rightShooter.setPower(0);
-                robot.intake.setPower(0);
+                robot.conveyor.setVelocity(0);
+                robot.leftShooter.setVelocity(0);
+                robot.rightShooter.setVelocity(0);
+                robot.intake.setVelocity(0);
 
                 encoderDrive(DRIVE_SPEED, 5,5,5,5, 5);
                 break;
@@ -290,16 +290,16 @@ public class BlueRight extends LinearOpMode
                 //encoderDrive(TURN_SPEED,-2,2,-2,2,4);
 
                 robot.guideServo.setPosition(guidePosition);
-                robot.conveyor.setPower(1);
-                robot.leftShooter.setPower(1);
-                robot.rightShooter.setPower(1);
-                robot.intake.setPower(1);
+                robot.conveyor.setVelocity(1);
+                robot.leftShooter.setVelocity(1);
+                robot.rightShooter.setVelocity(1);
+                robot.intake.setVelocity(1);
                 sleep(6000);
 
-                robot.conveyor.setPower(0);
-                robot.leftShooter.setPower(0);
-                robot.rightShooter.setPower(0);
-                robot.intake.setPower(0);
+                robot.conveyor.setVelocity(0);
+                robot.leftShooter.setVelocity(0);
+                robot.rightShooter.setVelocity(0);
+                robot.intake.setVelocity(0);
                 //drive to position on the launch line
                 encoderDrive(DRIVE_SPEED, 10,10,10,10, 5);
 
@@ -426,10 +426,10 @@ public class BlueRight extends LinearOpMode
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
-            robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            robot.frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            robot.backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            robot.backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
             // Determine new target position, and pass to motor controller
             newfrontLeftTarget = (int)(frontleftInches * COUNTS_PER_INCH);
@@ -439,21 +439,21 @@ public class BlueRight extends LinearOpMode
 
             robot.frontLeft.setTargetPosition(newfrontLeftTarget);
             robot.frontRight.setTargetPosition(newfrontRightTarget);
-            robot.backLeft.setTargetPosition(newfrontLeftTarget);
-            robot.backRight.setTargetPosition(newfrontRightTarget);
+            robot.backLeft.setTargetPosition(newbackLeftTarget);
+            robot.backRight.setTargetPosition(newbackRightTarget);
 
             // Turn On RUN_TO_POSITION
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            robot.frontRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            robot.backLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            robot.backRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.frontLeft.setPower(Math.abs(speed));
-            robot.frontRight.setPower(Math.abs(speed));
-            robot.backLeft.setPower(Math.abs(speed));
-            robot.backRight.setPower(Math.abs(speed));
+            robot.frontLeft.setVelocity(Math.abs(speed));
+            robot.frontRight.setVelocity(Math.abs(speed));
+            robot.backLeft.setVelocity(Math.abs(speed));
+            robot.backRight.setVelocity(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -475,16 +475,16 @@ public class BlueRight extends LinearOpMode
             }
 
             // Stop all motion;
-            robot.frontLeft.setPower(0);
-            robot.frontRight.setPower(0);
-            robot.backLeft.setPower(0);
-            robot.backRight.setPower(0);
+            robot.frontLeft.setVelocity(0);
+            robot.frontRight.setVelocity(0);
+            robot.backLeft.setVelocity(0);
+            robot.backRight.setVelocity(0);
 
             // Turn off RUN_TO_POSITION
-            robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            robot.frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            robot.backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            robot.backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             //  sleep(250);   // optional pause after each move
         }
     }

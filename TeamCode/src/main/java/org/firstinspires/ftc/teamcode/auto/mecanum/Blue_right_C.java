@@ -3,24 +3,24 @@ package org.firstinspires.ftc.teamcode.auto.mecanum;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Mecanum_hardware;
 
 
-
-@Autonomous(name="Mecanum encoder", group="mecanum")
-public class mecanum_encoder extends LinearOpMode {
+@Autonomous(name="Blue_right_C", group="mecanum")
+public class Blue_right_C extends LinearOpMode {
 
     Mecanum_hardware mecanum = new Mecanum_hardware();
     private ElapsedTime runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 0.78 ;   // 1  // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 3.78 ;     // For figuring circumference
+    static final double     DRIVE_GEAR_REDUCTION    = 1 ;   // 1  // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 3.54 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.5;
+    static final double     DRIVE_SPEED             = 1500;
     static final double     TURN_SPEED              = 0.3;
 
     @Override
@@ -52,25 +52,25 @@ public class mecanum_encoder extends LinearOpMode {
 
 
         //forward
-        encoderDrive(DRIVE_SPEED,40,40,40,40,10);
-
-        sleep(2000);
-
-        //backward
-        encoderDrive(DRIVE_SPEED,-40,-40,-40,-40,10);
-
-        sleep(2000);
-
-        //strafe right
-        encoderDrive(DRIVE_SPEED,40,-40,-40,40,10);
-
-        sleep(2000);
+        encoderDrive(DRIVE_SPEED,65,65,65,65,50);
 
         //strafe left
-        encoderDrive(DRIVE_SPEED,-40,40,40,-40,10);
+        encoderDrive(DRIVE_SPEED,-20,20,20,-20,50);
 
-        sleep(2000);
+        //shoot 3 rings
+        sleep(3000);
 
+        //forward to line up to wobble zone C
+        encoderDrive(DRIVE_SPEED, 30,30,30,30,50);
+
+        //strafe Left into wobble zone C
+        encoderDrive(DRIVE_SPEED,-10,10,10,-10,50);
+
+        //strafe Right out of wobble zone C
+        encoderDrive(DRIVE_SPEED,20,-20,-20,20,50);
+
+        //Reverse to Launch Line
+        encoderDrive(DRIVE_SPEED,-35,-35,-35,-35,50);
 
 
     }
@@ -88,8 +88,8 @@ public class mecanum_encoder extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newFrontLeftTarget = mecanum.frontRight.getCurrentPosition() + (int)(frontleftInches * COUNTS_PER_INCH);
-            newFrontRightTarget = mecanum.frontLeft.getCurrentPosition() + (int)(frontrightInches * COUNTS_PER_INCH);
+            newFrontLeftTarget = mecanum.frontLeft.getCurrentPosition() + (int)(frontleftInches * COUNTS_PER_INCH);
+            newFrontRightTarget = mecanum.frontRight.getCurrentPosition() + (int)(frontrightInches * COUNTS_PER_INCH);
             newBackLeftTarget = mecanum.backLeft.getCurrentPosition() + (int)(backleftInches * COUNTS_PER_INCH);
             newBackRightTarget = mecanum.backRight.getCurrentPosition() + (int)(backrightInches * COUNTS_PER_INCH);
             mecanum.frontRight.setTargetPosition(newFrontRightTarget);
@@ -98,52 +98,52 @@ public class mecanum_encoder extends LinearOpMode {
             mecanum.backRight.setTargetPosition(newBackRightTarget);
 
             // Turn On RUN_TO_POSITION
-            mecanum.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            mecanum.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            mecanum.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            mecanum.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            mecanum.frontRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            mecanum.frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            mecanum.backRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            mecanum.backLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
 
 
-            mecanum.frontRight.setPower(Math.abs(speed));
-            mecanum.frontLeft.setPower(Math.abs(speed));
-            mecanum.backRight.setPower(Math.abs(speed));
-            mecanum.backLeft.setPower(Math.abs(speed));
+            mecanum.frontRight.setVelocity(speed);
+            mecanum.frontLeft.setVelocity(speed);
+            mecanum.backRight.setVelocity(speed);
+            mecanum.backLeft.setVelocity(speed);
 
+            //mecanum.frontRight.setPower(Math.abs(speed));
+            //mecanum.frontLeft.setPower(Math.abs(speed));
+            //mecanum.backRight.setPower(Math.abs(speed));
+            //mecanum.backLeft.setPower(Math.abs(speed));
 
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (mecanum.frontRight.isBusy() && mecanum.frontLeft.isBusy())) {
+                    (mecanum.frontLeft.isBusy() && mecanum.frontRight.isBusy() &&
+                            mecanum.backRight.isBusy() && mecanum.backLeft.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newFrontLeftTarget,  newFrontRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                        mecanum.frontRight.getCurrentPosition(),
-                        mecanum.frontLeft.getCurrentPosition());
+                        mecanum.frontLeft.getCurrentPosition(),
+                        mecanum.frontRight.getCurrentPosition());
                 telemetry.update();
             }
 
+
+
             // Stop all motion;
-            mecanum.frontRight.setPower(0);
-            mecanum.frontLeft.setPower(0);
-            mecanum.backRight.setPower(0);
-            mecanum.backLeft.setPower(0);
+            mecanum.frontRight.setVelocity(0);
+            mecanum.frontLeft.setVelocity(0);
+            mecanum.backRight.setVelocity(0);
+            mecanum.backLeft.setVelocity(0);
 
             // Turn off RUN_TO_POSITION
-            mecanum.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            mecanum.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            mecanum.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            mecanum.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            mecanum.frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            mecanum.frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            mecanum.backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            mecanum.backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-            //  sleep(250);   // optional pause after each move
+            sleep(1500);   // optional pause after each move
         }
     }
 }

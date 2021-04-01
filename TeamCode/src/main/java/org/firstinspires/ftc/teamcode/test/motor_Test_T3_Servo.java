@@ -50,13 +50,13 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Motor_Test_T_A_Servo", group="Linear Opmode")
+@TeleOp(name="Motor_Test_T3_A_Servo", group="Linear Opmode")
 //@Disabled
-public class motor_Test_T_Servo extends LinearOpMode {
+public class motor_Test_T3_Servo extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor motor1 = null;
+    private DcMotor motor1, motor2,motor3 = null;
     private Servo servo = null;
 
     @Override
@@ -68,12 +68,15 @@ public class motor_Test_T_Servo extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         motor1  = hardwareMap.get(DcMotor.class, "SampleMotor1");
+        motor2  = hardwareMap.get(DcMotor.class, "SampleMotor2");
+        motor3  = hardwareMap.get(DcMotor.class, "SampleMotor3");
         servo = hardwareMap.get(Servo.class, "ServoTrigger");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         motor1.setDirection(DcMotor.Direction.FORWARD);
-
+        motor1.setDirection(DcMotor.Direction.FORWARD);
+        motor3.setDirection(DcMotor.Direction.REVERSE);
         servo.setPosition(0.78);
 
         // Wait for the game to start (driver presses PLAY)
@@ -104,10 +107,14 @@ public class motor_Test_T_Servo extends LinearOpMode {
 
             if(gamepad1.x){
                 motor1.setPower(1);
+                motor2.setPower(1);
+                motor3.setPower(1);
             }
 
             if (gamepad1.y){
                 motor1.setPower(0);
+                motor2.setPower(0);
+                motor3.setPower(0);
             }
 
             // Tank Mode uses one stick to control each wheel.
@@ -117,6 +124,8 @@ public class motor_Test_T_Servo extends LinearOpMode {
 
             // Send calculated power to wheels
             motor1.setPower(motorPower);
+            motor2.setPower(motorPower);
+            motor3.setPower(motorPower);
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             //telemetry.addData("Motors", "left (%.2f), right (%.2f)", motorPower);
