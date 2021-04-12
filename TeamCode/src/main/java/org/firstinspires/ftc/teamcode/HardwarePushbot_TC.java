@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -66,6 +67,7 @@ public class HardwarePushbot_TC
     public Servo armServo = null;
     public Servo gripServo = null;
     public Servo guideServo=null;
+    public Servo   gateServo;
 
 
 
@@ -101,6 +103,7 @@ public class HardwarePushbot_TC
         armServo = hwMap.get(Servo.class,"arm");
         gripServo = hwMap.get(Servo.class,"grip");
         guideServo = hwMap.get(Servo.class,"guide");
+        gateServo = hwMap.get(Servo.class, "gate");
 
         frontLeft.setDirection(DcMotorEx.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frontRight.setDirection(DcMotorEx.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -110,9 +113,9 @@ public class HardwarePushbot_TC
 
 
 
-        leftShooter.setDirection(DcMotorEx.Direction.REVERSE);
+        leftShooter.setDirection(DcMotorEx.Direction.FORWARD);
         rightShooter.setDirection(DcMotorEx.Direction.FORWARD);
-        intake.setDirection(DcMotorEx.Direction.REVERSE);
+        intake.setDirection(DcMotorEx.Direction.FORWARD);
         conveyor.setDirection(DcMotorEx.Direction.REVERSE);
 
 
@@ -130,14 +133,14 @@ public class HardwarePushbot_TC
 
 
         // Set all motors to zero power
-        frontLeft.setVelocity(0);
-        frontRight.setVelocity(0);
-        backLeft.setVelocity(0);
-        backRight.setVelocity(0);
-        leftShooter.setVelocity(0);
-        rightShooter.setVelocity(0);
-        intake.setVelocity(0);
-        conveyor.setVelocity(0);
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        leftShooter.setPower(0);
+        rightShooter.setPower(0);
+        intake.setPower(0);
+        conveyor.setPower(0);
 
 
 

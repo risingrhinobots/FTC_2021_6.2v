@@ -98,6 +98,7 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
         armServo = hardwareMap.get(Servo.class,"arm");
         gripServo = hardwareMap.get(Servo.class,"grip");
         guideServo = hardwareMap.get(Servo.class,"guide");
+        gateServo = hardwareMap.get(Servo.class, "gate");
         sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_ods");
        // gateServo = hardwareMap.get(Servo.class,"gate");
         BackLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -120,6 +121,7 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
         LeftShooter.setPower(0);
         RightShooter.setPower(0);
         armServo.setPosition(armPosition);
+        gateServo.setPosition(0.4);
         telemetry.addData("Arm Position", String.format("%.01f in", armPosition));
         telemetry.update();
 
@@ -195,8 +197,8 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
                 xr = 1;
             }
 
-            leftPower = (0.75*xl)*(leftPower*leftPower)+(0.01*leftPower);
-            rightPower = (0.75*xr)*(rightPower*rightPower)+(0.01*rightPower);
+            double finalleftPower = (xl)*(leftPower*leftPower)+(0.01*leftPower);
+            double finalrightPower = (xr)*(rightPower*rightPower)+(0.01*rightPower);
 
 
 
@@ -208,10 +210,10 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
             }
 */
             // Send calculated power to wheels
-            BackLeftDrive.setPower(leftPower);
-            BackRightDrive.setPower(rightPower);
-            FrontLeftDrive.setPower(leftPower);
-            FrontRightDrive.setPower(rightPower);
+            BackLeftDrive.setPower(finalleftPower);
+            BackRightDrive.setPower(finalrightPower);
+            FrontLeftDrive.setPower(finalleftPower);
+            FrontRightDrive.setPower(finalrightPower);
 
             //Run the only the intake motor
             if (gamepad1.left_trigger > 0) {
@@ -219,8 +221,21 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
             }
             //Reverse the intake and conveyor motor
             if (gamepad1.right_trigger > 0) {
-                InTakeMotor.setPower(-1);
-                ConveyorMotor.setPower(-1);
+                runtime.startTime();
+                while (runtime.seconds() < 0.5) {
+                    InTakeMotor.setPower(-0.2);
+                    ConveyorMotor.setPower(-1);
+                }
+                runtime.reset();
+            }
+
+            if(gamepad1.dpad_right){
+                runtime.reset();
+                while (runtime.seconds() < 0.5) {
+                    InTakeMotor.setPower(-0.2);
+                    ConveyorMotor.setPower(-1);
+                }
+                runtime.startTime();
             }
 
             //run only the intake and coveyor motor
@@ -291,6 +306,7 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
                 telemetry.addData("Arm Position", String.format("%.01f in", armPosition));
                 telemetry.update();
             }
+            /**
             // increase armposition slightly
             if(gamepad2.dpad_up){
                 armPosition = armPosition + 0.001;
@@ -311,6 +327,7 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
                 telemetry.addData("Arm Position", String.format("%.01f in", armPosition));
                 telemetry.update();
             }
+             */
             // open grip servo to pick up wobble
             if (gamepad2.b) {
                 //extend arm and open gripper to pick up the wobble
@@ -322,6 +339,8 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
                 gripPosition = 1;
                 gripServo.setPosition(gripPosition);
             }
+
+            /**
 
 // THIS BELOW CODE IS FOR THE WHITE GUIDE WHEEL
             if (gamepad1.dpad_up){
@@ -335,6 +354,21 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
                 sleep(1000);
                 guidePosition=0.55;
                 guideServo.setPosition(guidePosition);
+            }
+             */
+
+            if(gamepad1.dpad_up){
+                gateServo.setPosition(0.4);
+            }
+            if (gamepad1.dpad_down){
+                gateServo.setPosition(0.89);
+            }
+
+            if(gamepad2.dpad_up){
+                gateServo.setPosition(0.4);
+            }
+            if (gamepad2.dpad_down){
+                gateServo.setPosition(0.89);
             }
 
             telemetry.addData("leftpower", leftPower);

@@ -19,15 +19,15 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.autov2;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -40,9 +40,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@Autonomous(name = "Blue Right", group = "UltimateGame")
-//@Disabled
-public class BlueRight extends LinearOpMode
+@Autonomous(name = "Blue Left 2", group = "UltimateGame")
+
+public class Blueleftv2 extends LinearOpMode
 {
     OpenCvInternalCamera phoneCam;
     SkystoneDeterminationPipeline pipeline;
@@ -56,11 +56,12 @@ public class BlueRight extends LinearOpMode
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 1300;
-    static final double     TURN_SPEED              = 1000;
+    static final double     DRIVE_SPEED             = 1600;
+    static final double     TURN_SPEED              = 1300;
 
     double  armPosition, gripPosition, gatePosition,guidePosition;
     double armMinPosition, armMaxPosition;
+
 
     @Override
     public void runOpMode()
@@ -89,7 +90,6 @@ public class BlueRight extends LinearOpMode
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-
         armMaxPosition=0.16;
         armMinPosition=0.025;
         armPosition=0.03;
@@ -129,28 +129,50 @@ public class BlueRight extends LinearOpMode
 
         waitForStart();
 
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
+
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);
             telemetry.update();
 
-            if(pipeline.getAnalysis() > 165){
+            if (pipeline.getAnalysis() > 155) {
                 telemetry.addLine("four");
-                telemetry.update();
+                //move of up to launc line to shoot
+                encoderDrive(DRIVE_SPEED,50,50,50,50,10);
+
+                sleep(1000);
+
+                //turn right to shoot rings
+                encoderDrive(0.2,3,-3,3,-3,10);
+                sleep(1000);
+
+                robot.leftShooter.setPower(1);
+                sleep(1500);
+                robot.gateServo.setPosition(0.4);
+                robot.conveyor.setPower(1);
+                robot.intake.setPower(1);
                 sleep(5000);
 
-                //Drive forward to the target BOX
-                encoderDrive(DRIVE_SPEED, 110,110,110,110, 5);
+                robot.leftShooter.setPower(0);
+                robot.conveyor.setPower(0);
+                robot.intake.setPower(0);
 
-                // S1: Forward 50 Inches with 5 Sec timeout
-                //following is an example of left turn
-                // encoderDrive(TURN_SPEED,-10,10,-10,10,4);
-                //following is an example of right turn
-                //turn right since this is blue corner to drop the wobble from the back of the robot
-                encoderDrive(TURN_SPEED,11.5,-11.5,11.5,-11.5,4);  // S2: Turn Right 12 Inches with 4 Sec timeout
-                //after turning drive backwords so that the wobble can be dropped in the target
-                encoderDrive(DRIVE_SPEED,-20,-20,-20,-20,4);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                sleep(1000);
+
+                //turn left to straighten out
+                encoderDrive(0.2,-3,3,-3,3,10);
+
+                sleep(1000);
+
+                //move forward to be perpindicularly aligned with wobble zone A
+                encoderDrive(DRIVE_SPEED,15,15,15,15,10);
+
+                //turn right so the back of the robot is parrelell with the starting wall
+                encoderDrive(0.2,15,-15,15,-15,10);
+
+
+                //back into wobble zone A(not needed for blue left)
+                //encoderDrive(DRIVE_SPEED,-10,-10,-10,-10,10);
 
                 //get the arm and gripper to drop the wobble
                 armPosition = armMaxPosition;
@@ -160,8 +182,8 @@ public class BlueRight extends LinearOpMode
                 robot.gripServo.setPosition(gripPosition);
                 sleep(2000);
 
-                //move forward to clear away from wobble
-                encoderDrive(DRIVE_SPEED, 7,7,7,7, 5);
+                //move forward out of wobble zone
+                encoderDrive(DRIVE_SPEED,2,2,2,2,10);
 
                 //reset the arm and gripper to starting position
                 armPosition = armMinPosition;
@@ -169,45 +191,47 @@ public class BlueRight extends LinearOpMode
                 robot.armServo.setPosition(armPosition);
                 robot.gripServo.setPosition(gripPosition);
 
-                //turn left towards the shooting target zone
-                encoderDrive(TURN_SPEED, -11.5,11.5,-11.5,11.5, 5);
-                //back towards out of the launch line
-
-                encoderDrive(0.5*(DRIVE_SPEED), -50,-50,-50,-50, 5);
-
-
-                //encoderDrive(TURN_SPEED,-2,2,-2,2,4);
-
-                robot.guideServo.setPosition(guidePosition);
-                robot.conveyor.setVelocity(1);
-                robot.leftShooter.setVelocity(1);
-                robot.rightShooter.setVelocity(1);
-                robot.intake.setVelocity(1);
-                sleep(6000);
-
-                robot.conveyor.setVelocity(0);
-                robot.leftShooter.setVelocity(0);
-                robot.rightShooter.setVelocity(0);
-                robot.intake.setVelocity(0);
-
-                //drive to position on the launch line
-                encoderDrive(DRIVE_SPEED, 10,10,10,10, 5);
-
+                //turn left so the robot is perpindicualer with the starting wall
+                encoderDrive(0.2,-15,15,-15,15,10);
                 break;
-
-            }
-            else if(pipeline.getAnalysis() > 150){
+            } else if (pipeline.getAnalysis() > 140) {
                 telemetry.addLine("One");
+                //move of up to launc line to shoot
+                encoderDrive(DRIVE_SPEED,50,50,50,50,10);
+
+                sleep(1000);
+
+                //turn right to shoot rings
+                encoderDrive(0.2,3,-3,3,-3,10);
+                sleep(1000);
+
+                robot.leftShooter.setPower(1);
+                sleep(1500);
+                robot.gateServo.setPosition(0.4);
+                robot.conveyor.setPower(1);
+                robot.intake.setPower(1);
                 sleep(5000);
-                // Step through each leg of the path,
-                // Note: Reverse movement is obtained by setting a negative distance (not speed)
-                // FORWARD DRIVE SAMPLE. reverse drive will be all negative values
-                encoderDrive(DRIVE_SPEED, 93,93,93,93, 5);
-                // S1: Forward 50 Inches with 5 Sec timeout
-                //following is an example of left turn
-                // encoderDrive(TURN_SPEED,-10,10,-10,10,4);
-                //following is an example of right turn
-                encoderDrive(TURN_SPEED,11,-11,11,-11,4);  // S2: Turn Right 12 Inches with 4 Sec timeout
+
+                robot.leftShooter.setPower(0);
+                robot.conveyor.setPower(0);
+                robot.intake.setPower(0);
+
+                sleep(1000);
+
+                //turn left to straighten out
+                encoderDrive(0.2,-3,3,-3,3,10);
+
+                sleep(1000);
+
+                //move forward to be perpindicularly aligned with wobble zone B
+                encoderDrive(DRIVE_SPEED,25,25,25,25,10);
+
+                //turn left so the back of the robot is parrelell with the starting wall
+                encoderDrive(0.2,-15,15,-15,15,10);
+
+
+                //back into wobble zone A(not needed for blue left)
+                //encoderDrive(DRIVE_SPEED,-10,-10,-10,-10,10);
 
                 //get the arm and gripper to drop the wobble
                 armPosition = armMaxPosition;
@@ -216,7 +240,9 @@ public class BlueRight extends LinearOpMode
                 sleep(2500);
                 robot.gripServo.setPosition(gripPosition);
                 sleep(2000);
-                encoderDrive(DRIVE_SPEED, 5,5,5,5, 5);
+
+                //move forward out of wobble zone
+                encoderDrive(DRIVE_SPEED,2,2,2,2,10);
 
                 //reset the arm and gripper to starting position
                 armPosition = armMinPosition;
@@ -224,43 +250,50 @@ public class BlueRight extends LinearOpMode
                 robot.armServo.setPosition(armPosition);
                 robot.gripServo.setPosition(gripPosition);
 
+                //turn right so the robot is perpindicualer with the starting wall
+                encoderDrive(0.2,15,-15,15,-15,10);
 
-                encoderDrive(DRIVE_SPEED, -11,11,-11,11, 5);
-                //back towards out of the launch line
-                encoderDrive(DRIVE_SPEED, -36,-36,-36,-36, 5);
-                //turn towards the goal
-                encoderDrive(TURN_SPEED,-1.8,1.8,-1.8,1.8,4);
-
-                robot.guideServo.setPosition(guidePosition);
-                robot.conveyor.setVelocity(1);
-                robot.leftShooter.setVelocity(1);
-                robot.rightShooter.setVelocity(1);
-                robot.intake.setVelocity(1);
-                sleep(6000);
-
-                robot.conveyor.setVelocity(0);
-                robot.leftShooter.setVelocity(0);
-                robot.rightShooter.setVelocity(0);
-                robot.intake.setVelocity(0);
-
-                encoderDrive(DRIVE_SPEED, 5,5,5,5, 5);
+                //back into launch line
+                encoderDrive(DRIVE_SPEED,-10,-10,-10,-10,10);
                 break;
-            }
-            else {
+            } else {
                 telemetry.addLine("none");
+                //move of up to launc line to shoot
+                encoderDrive(DRIVE_SPEED,50,50,50,50,10);
+
+                sleep(1000);
+
+                //turn right to shoot rings
+                encoderDrive(0.2,3,-3,3,-3,10);
+                sleep(1000);
+
+                robot.leftShooter.setPower(1);
+                sleep(1500);
+                robot.gateServo.setPosition(0.4);
+                robot.conveyor.setPower(1);
+                robot.intake.setPower(1);
                 sleep(5000);
-                //Drive forward to the target BOX
-                encoderDrive(DRIVE_SPEED, 65,65,65,65, 5);
+
+                robot.leftShooter.setPower(0);
+                robot.conveyor.setPower(0);
+                robot.intake.setPower(0);
+
+                sleep(1000);
+
+                //turn left to straighten out
+                encoderDrive(0.2,-3,3,-3,3,10);
+
+                sleep(1000);
+
+                //move forward to be perpindicularly aligned with wobble zone A
+                encoderDrive(DRIVE_SPEED,35,35,35,35,10);
+
+                //turn right so the back of the robot is parrelell with the starting wall
+                encoderDrive(0.2,15,-15,15,-15,10);
 
 
-                // S1: Forward 50 Inches with 5 Sec timeout
-                //following is an example of left turn
-                // encoderDrive(TURN_SPEED,-10,10,-10,10,4);
-                //following is an example of right turn
-                //turn right since this is blue corner to drop the wobble from the back of the robot
-                encoderDrive(TURN_SPEED,11.5,-11.5,11.5,-11.5,4);  // S2: Turn Right 12 Inches with 4 Sec timeout
-                //after turning drive backwords so that the wobble can be dropped in the target
-                encoderDrive(DRIVE_SPEED,-20,-20,-20,-20,4);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                //back into wobble zone A(not needed for blue left)
+                //encoderDrive(DRIVE_SPEED,-10,-10,-10,-10,10);
 
                 //get the arm and gripper to drop the wobble
                 armPosition = armMaxPosition;
@@ -270,8 +303,8 @@ public class BlueRight extends LinearOpMode
                 robot.gripServo.setPosition(gripPosition);
                 sleep(2000);
 
-                //move forward to clear away from wobble
-                encoderDrive(DRIVE_SPEED, 6,6,6,6, 5);
+                //move forward out of wobble zone
+                encoderDrive(DRIVE_SPEED,2,2,2,2,10);
 
                 //reset the arm and gripper to starting position
                 armPosition = armMinPosition;
@@ -279,31 +312,11 @@ public class BlueRight extends LinearOpMode
                 robot.armServo.setPosition(armPosition);
                 robot.gripServo.setPosition(gripPosition);
 
-                //turn left towards the shooting target zone
-                encoderDrive(TURN_SPEED, -12,12,-12,12, 5);
-                //back towards out of the launch line
+                //turn left so the robot is perpindicualer with the starting wall
+                encoderDrive(0.2,-15,15,-15,15,10);
 
-                encoderDrive(DRIVE_SPEED, -11.5,-11.5,-11.5,-11.5, 5);
-
-
-
-
-                //encoderDrive(TURN_SPEED,-2,2,-2,2,4);
-
-                robot.guideServo.setPosition(guidePosition);
-                robot.conveyor.setVelocity(1);
-                robot.leftShooter.setVelocity(1);
-                robot.rightShooter.setVelocity(1);
-                robot.intake.setVelocity(1);
-                sleep(6000);
-
-                robot.conveyor.setVelocity(0);
-                robot.leftShooter.setVelocity(0);
-                robot.rightShooter.setVelocity(0);
-                robot.intake.setVelocity(0);
-                //drive to position on the launch line
-                encoderDrive(DRIVE_SPEED, 10,10,10,10, 5);
-
+                //back into launch line
+                encoderDrive(DRIVE_SPEED,-20,-20,-20,-20,10);
                 break;
             }
             // Don't burn CPU cycles busy-looping in this sample
@@ -332,13 +345,13 @@ public class BlueRight extends LinearOpMode
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(45,135);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(270,135);
 
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
 
-        final int FOUR_RING_THRESHOLD = 165;
-        final int ONE_RING_THRESHOLD = 150;
+        final int FOUR_RING_THRESHOLD = 150;
+        final int ONE_RING_THRESHOLD = 135;
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,

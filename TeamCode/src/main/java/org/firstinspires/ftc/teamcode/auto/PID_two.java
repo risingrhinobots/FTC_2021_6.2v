@@ -33,7 +33,8 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -41,7 +42,7 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
+ * It uses the common Pushbot hardware class to define the drive on the 
  * The code is structured as a LinearOpMode
  *
  * The code REQUIRES that you DO have encoders on the wheels,
@@ -70,23 +71,26 @@ import org.firstinspires.ftc.teamcode.HardwarePushbot_TC;
 //@Disabled
 public class PID_two extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    HardwarePushbot_TC robot   = new HardwarePushbot_TC();   // Use a Pushbot's hardware
+    public DcMotorEx  frontLeft   = null;
+    public DcMotorEx  frontRight  = null;
+    public DcMotorEx  backLeft  = null;
+    public DcMotorEx  backRight  = null;
+    
     private ElapsedTime     runtime = new ElapsedTime();
 
     FtcDashboard dashboard;
 
     public static double kP = 0.05;
     public static double kI = 0.1;
-    public static double kD = 0.00;
+    public static double kD = 0.05;
 
     static final double     COUNTS_PER_MOTOR_REV    = 537.6;  // 1440;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 0.78 ;   // 1  // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.5;
-    static final double     TURN_SPEED              = 0.3;
+    static final double     DRIVE_SPEED             = 1200;
+    static final double     TURN_SPEED              = 1000;
     final double tolerance= 0.00000000001;
 
 
@@ -97,35 +101,53 @@ public class PID_two extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+
+        frontLeft  = hardwareMap.get(DcMotorEx.class, "FrontLeft");
+        frontRight = hardwareMap.get(DcMotorEx.class, "FrontRight");
+        backLeft =  hardwareMap.get(DcMotorEx.class, "BackLeft");
+        backRight = hardwareMap.get(DcMotorEx.class, "BackRight");
+
+        frontLeft.setDirection(DcMotorEx.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        frontRight.setDirection(DcMotorEx.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        backLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        backRight.setDirection(DcMotorEx.Direction.FORWARD);
+
+        frontLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        robot.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.frontRight.getCurrentPosition(),
-                          robot.frontRight.getCurrentPosition());
+                          frontRight.getCurrentPosition(),
+                          frontRight.getCurrentPosition());
         telemetry.update();
-
-        dashboard = FtcDashboard.getInstance();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
 
-        encoderPID(65,65);
+        encoderPID(40,40);
         sleep(2000);
         //encoderPID(-11,11);
 
@@ -145,6 +167,11 @@ public class PID_two extends LinearOpMode {
      */
     public void encoderPID(double frontleftInches, double frontrightInches) {
 
+        frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
             runtime.reset();
 
             double errorsumleft = 0;
@@ -161,8 +188,8 @@ public class PID_two extends LinearOpMode {
 
             while (opModeIsActive()){
 
-                double errorleft = frontleftInches - (robot.frontLeft.getCurrentPosition()/COUNTS_PER_INCH);
-                double errorright = frontrightInches - (robot.frontRight.getCurrentPosition()/COUNTS_PER_INCH);
+                double errorleft = frontleftInches - (frontLeft.getCurrentPosition()/COUNTS_PER_INCH);
+                double errorright = frontrightInches - (frontRight.getCurrentPosition()/COUNTS_PER_INCH);
                 double dt = runtime.seconds() - lasttime;
 
                 if(Math.abs(errorleft) < iLimit){
@@ -176,16 +203,16 @@ public class PID_two extends LinearOpMode {
                 double errorateleft = (errorleft - lasterrorleft) / dt;
                 double errorrateright = (errorright - lasterrorright) / dt;
 
-                double leftspeed = kP*errorleft + kI*errorsumleft + kD*errorateleft;
-                double rightspeed = kP*errorright + kI*errorsumright + kD*errorrateright;
+                double leftspeed = (kP*errorleft + kI*errorsumleft + kD*errorateleft);
+                double rightspeed = (kP*errorright + kI*errorsumright + kD*errorrateright);
 
                 double finalleftspeed = Range.clip(leftspeed,-0.8,0.8);
                 double finalrightspeed = Range.clip(rightspeed,-0.8,0.8);
 
-                robot.frontRight.setPower(finalrightspeed);
-                robot.frontLeft.setPower(finalleftspeed);
-                robot.backRight.setPower(finalrightspeed);
-                robot.backLeft.setPower(finalleftspeed);
+                frontRight.setPower(finalrightspeed);
+                frontLeft.setPower(finalleftspeed);
+                backRight.setPower(finalrightspeed);
+                backLeft.setPower(finalleftspeed);
 
                 lasttime = runtime.seconds();
                 lasterrorleft = errorleft;
@@ -196,7 +223,6 @@ public class PID_two extends LinearOpMode {
 
                 telemetry.addData("leftspeed",finalleftspeed);
                 telemetry.addData("rightspeed", finalrightspeed);
-
 
 
             }
