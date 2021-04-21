@@ -97,9 +97,9 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
         RightShooter = hardwareMap.get(DcMotor.class, "RightShooter");
         armServo = hardwareMap.get(Servo.class,"arm");
         gripServo = hardwareMap.get(Servo.class,"grip");
-        guideServo = hardwareMap.get(Servo.class,"guide");
+   //     guideServo = hardwareMap.get(Servo.class,"guide");
         gateServo = hardwareMap.get(Servo.class, "gate");
-        sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_ods");
+     //   sensorRange = hardwareMap.get(DistanceSensor.class, "sensor_ods");
        // gateServo = hardwareMap.get(Servo.class,"gate");
         BackLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -246,15 +246,10 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
 
             //right bumper is to drop the wobble to the end drop zone during end game
             if(gamepad1.right_bumper){
-                //extend arm and open gripper to pick up the wobble
-                armPosition = 0.14; // arm drop wobble position
-                gripPosition = 0.55;
-                armServo.setPosition(armPosition);
-                sleep(1000);
-                gripServo.setPosition(gripPosition);
-                telemetry.addData("Arm Position", String.format("%.01f in", armPosition));
-                telemetry.update();
-
+                InTakeMotor.setPower(1);
+                ConveyorMotor.setPower(1);
+                LeftShooter.setPower(0.8);
+                RightShooter.setPower(0.8);
             }
 
             //turn off shooters and converyor motor
@@ -373,7 +368,7 @@ public class Teleop_Team16310_4WheelTest2020 extends LinearOpMode {
 
             telemetry.addData("leftpower", leftPower);
             telemetry.addData("rightpower",rightPower);
-            telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
+       //     telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
 
             telemetry.update();
 

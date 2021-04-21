@@ -39,9 +39,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-@Autonomous(name = "Blue Right 2", group = "UltimateGame")
+@Autonomous(name = "Red Left 2", group = "UltimateGame")
 //@Disabled
-public class BlueRightv2 extends LinearOpMode
+public class Redleftv2 extends LinearOpMode
 {
     OpenCvInternalCamera phoneCam;
     SkystoneDeterminationPipeline pipeline;
@@ -139,13 +139,15 @@ public class BlueRightv2 extends LinearOpMode
                 telemetry.addLine("four");
                 telemetry.update();
 
-                //move of up to launch line to shoot
+                //move of up to launc line to shoot
+                //move of up to launc line to shoot
                 encoderDrive(DRIVE_SPEED,45,45,45,45,10);
 
-                sleep(1000);
+                //sleep(1000);
 
-                //turn left to shoot rings
-                encoderDrive(0.2,-3,3,-3,3,10);
+                //turn right to shoot rings
+                encoderDrive(TURN_SPEED,2.0,-2.0,2.0,-2.0,10);
+                // sleep(1000);
 
                 robot.leftShooter.setPower(1);
                 sleep(500);
@@ -158,18 +160,147 @@ public class BlueRightv2 extends LinearOpMode
                 robot.conveyor.setPower(0);
                 robot.intake.setPower(0);
 
-                //turn RIGHT correct back after  shoot rings
-                encoderDrive(0.2,4,-4,4,-4,10);
+                //sleep(1000);
+
+                //turn left to straighten out
+                encoderDrive(TURN_SPEED,-1.5,1.5,-1.5,1.5,10);
                 sleep(1000);
 
                 //move forward to be perpindicularly aligned with wobble zone B
-                encoderDrive(DRIVE_SPEED,60,60,60,60,10);
+                encoderDrive(DRIVE_SPEED,65,65,65,65,10);
 
-                //turn left so the back of the robot is parrelell with the starting wall
-                encoderDrive(TURN_SPEED,13,-13,13,-13,10);
+                //turn rigth so the back of the robot is parrelell with the starting wall
+                encoderDrive(TURN_SPEED,-13,13,-13,13,10);
 
                 //back into wobble zone B
-                encoderDrive(DRIVE_SPEED,-12,-12,-12,-12,10);
+                encoderDrive(DRIVE_SPEED,-25,-25,-25,-25,10);
+
+                //get the arm and gripper to drop the wobble
+                armPosition = armMaxPosition;
+                gripPosition = 0.55;
+                robot.armServo.setPosition(armPosition);
+                sleep(2500);
+                robot.gripServo.setPosition(gripPosition);
+                sleep(2000);
+
+                //move forward out of wobble zone
+                encoderDrive(DRIVE_SPEED,35,35,35,35,10);
+
+                //reset the arm and gripper to starting position
+                armPosition = armMinPosition;
+                gripPosition = 0.95;
+                robot.armServo.setPosition(armPosition);
+                robot.gripServo.setPosition(gripPosition);
+
+                //turn right so the robot is perpindicualer with the starting wall
+                encoderDrive(0.2,13,-13,13,-13,10);
+
+                //back into launch line
+                encoderDrive(DRIVE_SPEED,-30,-30,-30,-30,10);
+                break;
+
+
+            }
+            else if(pipeline.getAnalysis() > 135){
+                telemetry.addLine("One");
+                //move of up to launc line to shoot
+                //move of up to launc line to shoot
+                encoderDrive(DRIVE_SPEED,45,45,45,45,10);
+
+                //sleep(1000);
+
+                //turn right to shoot rings
+                encoderDrive(TURN_SPEED,2.0,-2.0,2.0,-2.0,10);
+                // sleep(1000);
+
+                robot.leftShooter.setPower(1);
+                sleep(500);
+                robot.gateServo.setPosition(0.4);
+                robot.conveyor.setPower(1);
+                robot.intake.setPower(1);
+                sleep(2500);
+
+                robot.leftShooter.setPower(0);
+                robot.conveyor.setPower(0);
+                robot.intake.setPower(0);
+
+                //sleep(1000);
+
+                //turn left to straighten out
+                encoderDrive(TURN_SPEED,-2.0,2.0,-2.0,2.0,10);
+
+                sleep(1000);
+
+                //move forward to be perpindicularly aligned with wobble zone B
+                encoderDrive(DRIVE_SPEED,50,50,50,50,10);
+
+                //turn right so the back of the robot is parrelell with the starting wall
+                encoderDrive(TURN_SPEED,-13,13,-13,13,10);
+
+                //back into wobble zone B
+                encoderDrive(DRIVE_SPEED,-2,-2,-2,-2,10);
+
+                //get the arm and gripper to drop the wobble
+                armPosition = armMaxPosition;
+                gripPosition = 0.55;
+                robot.armServo.setPosition(armPosition);
+                sleep(2500);
+                robot.gripServo.setPosition(gripPosition);
+                sleep(2000);
+
+                //move forward out of wobble zone
+                encoderDrive(DRIVE_SPEED,8,8,8,8,10);
+
+                //reset the arm and gripper to starting position
+                armPosition = armMinPosition;
+                gripPosition = 0.95;
+                robot.armServo.setPosition(armPosition);
+                robot.gripServo.setPosition(gripPosition);
+
+                //turn left so the robot is perpindicualer with the starting wall
+                encoderDrive(0.2,10,-10,10,-10,10);
+
+                //back into launch line
+                encoderDrive(DRIVE_SPEED,-15,-15,-15,-15,10);
+                break;
+            }
+            else {
+                telemetry.addLine("none");
+
+                //move of up to launc line to shoot
+                encoderDrive(DRIVE_SPEED,45,45,45,45,10);
+
+                //sleep(1000);
+
+                //turn right to shoot rings
+                encoderDrive(TURN_SPEED,2.0,-2.0,2.0,-2.0,10);
+               // sleep(1000);
+
+                robot.leftShooter.setPower(1);
+                sleep(500);
+                robot.gateServo.setPosition(0.4);
+                robot.conveyor.setPower(1);
+                robot.intake.setPower(1);
+                sleep(2500);
+
+                robot.leftShooter.setPower(0);
+                robot.conveyor.setPower(0);
+                robot.intake.setPower(0);
+
+                //sleep(1000);
+
+                //turn left to straighten out
+                encoderDrive(TURN_SPEED,-2.0,2.0,-2.0,2.0,10);
+  //              sleep(1000);
+
+                //move forward to be perpindicularly aligned with wobble zone A
+                encoderDrive(DRIVE_SPEED,30,30,30,30,10);
+
+                //turn left so the back of the robot is paralell with the starting wall
+                encoderDrive(TURN_SPEED,-11,11,-11,11,10);
+
+                //back into wobble zone A
+                encoderDrive(DRIVE_SPEED,-20,-20,-20,-20,10);
 
                 //get the arm and gripper to drop the wobble
                 armPosition = armMaxPosition;
@@ -188,128 +319,8 @@ public class BlueRightv2 extends LinearOpMode
                 robot.armServo.setPosition(armPosition);
                 robot.gripServo.setPosition(gripPosition);
 
-                //turn left so the robot is perpindicualer with the starting wall
-                encoderDrive(0.2,-11,11,-11,11,10);
-
-                //back into launch line
-                encoderDrive(DRIVE_SPEED,-35,-35,-35,-35,10);
-                break;
-
-
-            }
-            else if(pipeline.getAnalysis() > 135){
-                telemetry.addLine("One");
-                //move of up to launch line to shoot
-                encoderDrive(DRIVE_SPEED,45,45,45,45,10);
-
-                sleep(1000);
-
-                //turn left to shoot rings
-                encoderDrive(0.2,-3,3,-3,3,10);
-
-                robot.leftShooter.setPower(1);
-                sleep(500);
-                robot.gateServo.setPosition(0.4);
-                robot.conveyor.setPower(1);
-                robot.intake.setPower(1);
-                sleep(2500);
-
-                robot.leftShooter.setPower(0);
-                robot.conveyor.setPower(0);
-                robot.intake.setPower(0);
-
-                //turn RIGHT correct back after  shoot rings
-                encoderDrive(0.2,4,-4,4,-4,10);
-
-                sleep(1000);
-
-                //move forward to be perpindicularly aligned with wobble zone B
-                encoderDrive(DRIVE_SPEED,40,40,40,40,10);
-
-                //turn left so the back of the robot is parrelell with the starting wall
-                encoderDrive(TURN_SPEED,13,-13,13,-13,10);
-
-                //back into wobble zone B
-                encoderDrive(DRIVE_SPEED,-2,-2,-2,-2,10);
-
-                //get the arm and gripper to drop the wobble
-                armPosition = armMaxPosition;
-                gripPosition = 0.55;
-                robot.armServo.setPosition(armPosition);
-                sleep(2500);
-                robot.gripServo.setPosition(gripPosition);
-                sleep(2000);
-
-                //move forward out of wobble zone
-                encoderDrive(DRIVE_SPEED,12,12,12,12,10);
-
-                //reset the arm and gripper to starting position
-                armPosition = armMinPosition;
-                gripPosition = 0.95;
-                robot.armServo.setPosition(armPosition);
-                robot.gripServo.setPosition(gripPosition);
-
-                //turn left so the robot is perpindicualer with the starting wall
-                encoderDrive(0.2,-10,10,-10,10,10);
-
-                //back into launch line
-                encoderDrive(DRIVE_SPEED,-10,-10,-10,-10,10);
-                break;
-            }
-            else {
-                telemetry.addLine("none");
-
-                //move of up to launch line to shoot
-                encoderDrive(DRIVE_SPEED,45,45,45,45,10);
-
-                sleep(1000);
-
-                //turn left to shoot rings
-                encoderDrive(0.2,-3,3,-3,3,10);
-
-                robot.leftShooter.setPower(1);
-                sleep(500);
-                robot.gateServo.setPosition(0.4);
-                robot.conveyor.setPower(1);
-                robot.intake.setPower(1);
-                sleep(2500);
-
-                robot.leftShooter.setPower(0);
-                robot.conveyor.setPower(0);
-                robot.intake.setPower(0);
-
-                //turn RIGHT correct back after  shoot rings
-                encoderDrive(0.2,4,-4,4,-4,10);
-               sleep(1000);
-
-                //move forward to be perpindicularly aligned with wobble zone A
-                encoderDrive(DRIVE_SPEED,20,20,20,20,10);
-
-                //turn right so the back of the robot is paralell with the starting wall
-                encoderDrive(TURN_SPEED,11,-11,11,-11,10);
-
-                //back into wobble zone A
-                encoderDrive(DRIVE_SPEED,-20,-20,-20,-20,10);
-
-                //get the arm and gripper to drop the wobble
-                armPosition = armMaxPosition;
-                gripPosition = 0.55;
-                robot.armServo.setPosition(armPosition);
-                sleep(2500);
-                robot.gripServo.setPosition(gripPosition);
-                sleep(500);
-
-                //move forward out of wobble zone
-                encoderDrive(0.7,20,20,20,20,10);
-
-                //reset the arm and gripper to starting position
-                armPosition = armMinPosition;
-                gripPosition = 0.95;
-                robot.armServo.setPosition(armPosition);
-                robot.gripServo.setPosition(gripPosition);
-
-                //turn left so the robot is perpindicualer with the starting wall
-                encoderDrive(0.2,-11,11,-11,11,10);
+                //turn right so the robot is perpindicualer with the starting wall
+                encoderDrive(0.2,11,-11,11,-11,10);
 
                 break;
             }
@@ -339,10 +350,10 @@ public class BlueRightv2 extends LinearOpMode
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(45,130);
-        //use 135 y for homefield
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(275,130);
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
+
         final int FOUR_RING_THRESHOLD = 155;
         final int ONE_RING_THRESHOLD = 140;
 

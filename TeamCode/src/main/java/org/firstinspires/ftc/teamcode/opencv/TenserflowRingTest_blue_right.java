@@ -48,7 +48,8 @@ public class TenserflowRingTest_blue_right extends LinearOpMode
     FtcDashboard dashboard;
 
     public static double xposition = 45;
-    public static double yposition = 135;
+    public static double yposition = 130;
+    //Home field use 135 for y
 
     @Override
     public void runOpMode()
@@ -116,8 +117,8 @@ public class TenserflowRingTest_blue_right extends LinearOpMode
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
 
-        final int FOUR_RING_THRESHOLD = 165;
-        final int ONE_RING_THRESHOLD = 150;
+        final int FOUR_RING_THRESHOLD = 150;
+        final int ONE_RING_THRESHOLD = 135;
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,

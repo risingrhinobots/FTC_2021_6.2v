@@ -56,8 +56,8 @@ public class Blueleftv2 extends LinearOpMode
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 1600;
-    static final double     TURN_SPEED              = 1300;
+    static final double     DRIVE_SPEED             = 0.5;
+    static final double     TURN_SPEED              = 0.2;
 
     double  armPosition, gripPosition, gatePosition,guidePosition;
     double armMinPosition, armMaxPosition;
@@ -135,15 +135,15 @@ public class Blueleftv2 extends LinearOpMode
             telemetry.addData("Position", pipeline.position);
             telemetry.update();
 
-            if (pipeline.getAnalysis() > 155) {
+            if (pipeline.getAnalysis() > 150) {
                 telemetry.addLine("four");
                 //move of up to launc line to shoot
-                encoderDrive(DRIVE_SPEED,50,50,50,50,10);
+                encoderDrive(DRIVE_SPEED,47,47,47,47,10);
 
                 sleep(1000);
 
                 //turn right to shoot rings
-                encoderDrive(0.2,3,-3,3,-3,10);
+                encoderDrive(TURN_SPEED,3,-3,3,-3,10);
                 sleep(1000);
 
                 robot.leftShooter.setPower(1);
@@ -151,7 +151,7 @@ public class Blueleftv2 extends LinearOpMode
                 robot.gateServo.setPosition(0.4);
                 robot.conveyor.setPower(1);
                 robot.intake.setPower(1);
-                sleep(5000);
+                sleep(2500);
 
                 robot.leftShooter.setPower(0);
                 robot.conveyor.setPower(0);
@@ -160,15 +160,15 @@ public class Blueleftv2 extends LinearOpMode
                 sleep(1000);
 
                 //turn left to straighten out
-                encoderDrive(0.2,-3,3,-3,3,10);
+                encoderDrive(TURN_SPEED,-2,2,-2,2,10);
 
                 sleep(1000);
 
                 //move forward to be perpindicularly aligned with wobble zone A
-                encoderDrive(DRIVE_SPEED,15,15,15,15,10);
+                encoderDrive(DRIVE_SPEED,60,60,60,60,10);
 
                 //turn right so the back of the robot is parrelell with the starting wall
-                encoderDrive(0.2,15,-15,15,-15,10);
+                encoderDrive(TURN_SPEED,15,-15,15,-15,10);
 
 
                 //back into wobble zone A(not needed for blue left)
@@ -183,7 +183,7 @@ public class Blueleftv2 extends LinearOpMode
                 sleep(2000);
 
                 //move forward out of wobble zone
-                encoderDrive(DRIVE_SPEED,2,2,2,2,10);
+                encoderDrive(DRIVE_SPEED,4,4,4,4,10);
 
                 //reset the arm and gripper to starting position
                 armPosition = armMinPosition;
@@ -192,17 +192,21 @@ public class Blueleftv2 extends LinearOpMode
                 robot.gripServo.setPosition(gripPosition);
 
                 //turn left so the robot is perpindicualer with the starting wall
-                encoderDrive(0.2,-15,15,-15,15,10);
+                encoderDrive(TURN_SPEED,-14,14,-14,14,10);
+
+                //back into Launch line
+                encoderDrive(DRIVE_SPEED,-35,-35,-35,-35,10);
                 break;
-            } else if (pipeline.getAnalysis() > 140) {
+                //end of 4 ring block
+            } else if (pipeline.getAnalysis() > 135) {
                 telemetry.addLine("One");
                 //move of up to launc line to shoot
-                encoderDrive(DRIVE_SPEED,50,50,50,50,10);
+                encoderDrive(DRIVE_SPEED,47,47,47,47,10);
 
                 sleep(1000);
 
                 //turn right to shoot rings
-                encoderDrive(0.2,3,-3,3,-3,10);
+                encoderDrive(TURN_SPEED,3,-3,3,-3,10);
                 sleep(1000);
 
                 robot.leftShooter.setPower(1);
@@ -210,24 +214,24 @@ public class Blueleftv2 extends LinearOpMode
                 robot.gateServo.setPosition(0.4);
                 robot.conveyor.setPower(1);
                 robot.intake.setPower(1);
-                sleep(5000);
+                sleep(2500);
 
                 robot.leftShooter.setPower(0);
                 robot.conveyor.setPower(0);
                 robot.intake.setPower(0);
 
-                sleep(1000);
+                //sleep(500);
 
                 //turn left to straighten out
-                encoderDrive(0.2,-3,3,-3,3,10);
+                encoderDrive(TURN_SPEED,-2,2,-2,2,10);
 
                 sleep(1000);
 
                 //move forward to be perpindicularly aligned with wobble zone B
-                encoderDrive(DRIVE_SPEED,25,25,25,25,10);
+                encoderDrive(DRIVE_SPEED,40,40,40,40,10);
 
                 //turn left so the back of the robot is parrelell with the starting wall
-                encoderDrive(0.2,-15,15,-15,15,10);
+                encoderDrive(TURN_SPEED,-15,15,-15,15,10);
 
 
                 //back into wobble zone A(not needed for blue left)
@@ -242,7 +246,7 @@ public class Blueleftv2 extends LinearOpMode
                 sleep(2000);
 
                 //move forward out of wobble zone
-                encoderDrive(DRIVE_SPEED,2,2,2,2,10);
+                encoderDrive(DRIVE_SPEED,4,4,4,4,10);
 
                 //reset the arm and gripper to starting position
                 armPosition = armMinPosition;
@@ -251,7 +255,7 @@ public class Blueleftv2 extends LinearOpMode
                 robot.gripServo.setPosition(gripPosition);
 
                 //turn right so the robot is perpindicualer with the starting wall
-                encoderDrive(0.2,15,-15,15,-15,10);
+                encoderDrive(TURN_SPEED,15,-15,15,-15,10);
 
                 //back into launch line
                 encoderDrive(DRIVE_SPEED,-10,-10,-10,-10,10);
@@ -259,12 +263,12 @@ public class Blueleftv2 extends LinearOpMode
             } else {
                 telemetry.addLine("none");
                 //move of up to launc line to shoot
-                encoderDrive(DRIVE_SPEED,50,50,50,50,10);
+                encoderDrive(DRIVE_SPEED,47,47,47,47,10);
 
                 sleep(1000);
 
                 //turn right to shoot rings
-                encoderDrive(0.2,3,-3,3,-3,10);
+                encoderDrive(TURN_SPEED,2,-2,2,-1,10);
                 sleep(1000);
 
                 robot.leftShooter.setPower(1);
@@ -272,7 +276,7 @@ public class Blueleftv2 extends LinearOpMode
                 robot.gateServo.setPosition(0.4);
                 robot.conveyor.setPower(1);
                 robot.intake.setPower(1);
-                sleep(5000);
+                sleep(2500);
 
                 robot.leftShooter.setPower(0);
                 robot.conveyor.setPower(0);
@@ -281,15 +285,15 @@ public class Blueleftv2 extends LinearOpMode
                 sleep(1000);
 
                 //turn left to straighten out
-                encoderDrive(0.2,-3,3,-3,3,10);
+                encoderDrive(TURN_SPEED,-1,1,-1,1,10);
 
                 sleep(1000);
 
                 //move forward to be perpindicularly aligned with wobble zone A
-                encoderDrive(DRIVE_SPEED,35,35,35,35,10);
+                encoderDrive(DRIVE_SPEED,20,20,20,20,10);
 
                 //turn right so the back of the robot is parrelell with the starting wall
-                encoderDrive(0.2,15,-15,15,-15,10);
+                encoderDrive(TURN_SPEED,15,-15,15,-15,10);
 
 
                 //back into wobble zone A(not needed for blue left)
@@ -304,7 +308,7 @@ public class Blueleftv2 extends LinearOpMode
                 sleep(2000);
 
                 //move forward out of wobble zone
-                encoderDrive(DRIVE_SPEED,2,2,2,2,10);
+                encoderDrive(DRIVE_SPEED,4,4,4,4,10);
 
                 //reset the arm and gripper to starting position
                 armPosition = armMinPosition;
@@ -313,10 +317,18 @@ public class Blueleftv2 extends LinearOpMode
                 robot.gripServo.setPosition(gripPosition);
 
                 //turn left so the robot is perpindicualer with the starting wall
-                encoderDrive(0.2,-15,15,-15,15,10);
+                encoderDrive(TURN_SPEED,-11,11,-11,11,10);
+
+                //move forward out of launch line
+                encoderDrive(DRIVE_SPEED,45,45,45,45,10);
+
+                sleep(6000);
+
+                //back into Launch line
+                encoderDrive(DRIVE_SPEED,-35,-35,-35,-35,10);
 
                 //back into launch line
-                encoderDrive(DRIVE_SPEED,-20,-20,-20,-20,10);
+                //encoderDrive(DRIVE_SPEED,-20,-20,-20,-20,10);
                 break;
             }
             // Don't burn CPU cycles busy-looping in this sample
@@ -345,8 +357,8 @@ public class Blueleftv2 extends LinearOpMode
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(270,135);
-
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(270,130);
+        //use 135 y for home field
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
 
@@ -440,21 +452,16 @@ public class Blueleftv2 extends LinearOpMode
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
-            robot.frontLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            robot.frontRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            robot.backLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            robot.backRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
-            // Determine new target position, and pass to motor controller
-            newfrontLeftTarget = (int)(frontleftInches * COUNTS_PER_INCH);
-            newfrontRightTarget = (int)(frontrightInches * COUNTS_PER_INCH);
-            newbackLeftTarget = (int)(backleftInches * COUNTS_PER_INCH);
-            newbackRightTarget = (int)(backrightInches * COUNTS_PER_INCH);
+            newfrontLeftTarget = robot.frontLeft.getCurrentPosition() + (int)(frontleftInches * COUNTS_PER_INCH);
+            newfrontRightTarget = robot.frontRight.getCurrentPosition() + (int)(frontrightInches * COUNTS_PER_INCH);
+            newbackLeftTarget = robot.backLeft.getCurrentPosition() + (int)(backleftInches * COUNTS_PER_INCH);
+            newbackRightTarget = robot.backRight.getCurrentPosition() + (int)(backrightInches * COUNTS_PER_INCH);
 
             robot.frontLeft.setTargetPosition(newfrontLeftTarget);
             robot.frontRight.setTargetPosition(newfrontRightTarget);
-            robot.backLeft.setTargetPosition(newbackLeftTarget);
-            robot.backRight.setTargetPosition(newbackRightTarget);
+            robot.backLeft.setTargetPosition(newfrontLeftTarget);
+            robot.backRight.setTargetPosition(newfrontRightTarget);
+
 
             // Turn On RUN_TO_POSITION
             robot.frontLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -464,10 +471,10 @@ public class Blueleftv2 extends LinearOpMode
 
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.frontLeft.setVelocity(Math.abs(speed));
-            robot.frontRight.setVelocity(Math.abs(speed));
-            robot.backLeft.setVelocity(Math.abs(speed));
-            robot.backRight.setVelocity(Math.abs(speed));
+            robot.frontLeft.setPower(Math.abs(speed));
+            robot.frontRight.setPower(Math.abs(speed));
+            robot.backLeft.setPower(Math.abs(speed));
+            robot.backRight.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -489,10 +496,10 @@ public class Blueleftv2 extends LinearOpMode
             }
 
             // Stop all motion;
-            robot.frontLeft.setVelocity(0);
-            robot.frontRight.setVelocity(0);
-            robot.backLeft.setVelocity(0);
-            robot.backRight.setVelocity(0);
+            robot.frontLeft.setPower(0);
+            robot.frontRight.setPower(0);
+            robot.backLeft.setPower(0);
+            robot.backRight.setPower(0);
 
             // Turn off RUN_TO_POSITION
             robot.frontLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);

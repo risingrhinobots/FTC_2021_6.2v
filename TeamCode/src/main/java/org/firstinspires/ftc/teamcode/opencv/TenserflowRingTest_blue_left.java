@@ -102,7 +102,8 @@ public class TenserflowRingTest_blue_left extends LinearOpMode
          */
       //static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(65,130); //Blue Rright position
 
-       static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(270,135); //Blue left position
+       static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(270,130); //Blue left position
+        //use 135 y for home field
 
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
